@@ -1,0 +1,7 @@
+{
+  "name": "ping_pong",
+  "description": "Example host for native messaging",
+  "path": "A:\\Files\\CodeRepo\\webextensions-examples\\native-messaging\\app\\ping_pong_win.bat",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://kfdhfbcijbdimeikobdjgemohmfnlnpo/"]
+}

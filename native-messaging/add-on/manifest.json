@@ -1,0 +1,21 @@
+{
+
+  "description": "Native messaging example add-on",
+  "manifest_version": 3,
+  "name": "Native messaging example",
+  "version": "1.0",
+  "icons": {
+    "48": "icons/message.svg"
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": "icons/message.svg",
+    "default_title": "Click Me"
+  },
+
+  "permissions": ["nativeMessaging"]
+
+}
