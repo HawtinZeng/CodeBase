@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { ComboEvent, Graph, NodeData, NodeEvent } from '@antv/g6'
+import { ComboEvent, Graph, NodeEvent, type NodeData } from '@antv/g6'
 import { onMounted } from 'vue'
+import { uniqueId } from 'lodash'
+
+let graph: Graph
 onMounted(() => {
-  const graph = new Graph({
-    container: document.getElementById('container'),
+  graph = new Graph({
+    container: document.getElementById('container')!,
     width: 1500,
-    height: 1500,
+    height: 1000,
     data: {
       nodes: [
-        { id: 'node1', combo: 'combo1', style: { x: 250, y: 150 } },
-        { id: 'node2', combo: 'combo1', style: { x: 350, y: 150 } },
-        { id: 'node4', combo: 'combo1', style: { x: 350, y: 400 } },
-        { id: 'node3', combo: 'combo2', style: { x: 250, y: 300 } }
+        { id: 'node1', combo: '', style: { x: 250, y: 150, labelText: 'node1' } },
+        { id: 'node2', combo: '', style: { x: 350, y: 150, labelText: 'node2' } },
+        { id: 'node4', combo: '', style: { x: 350, y: 400, labelText: 'node4' } },
+        { id: 'node3', combo: 'combo2', style: { x: 250, y: 300, labelText: 'node3' } }
       ],
       combos: [
         { id: 'combo1', combo: 'combo2' },
@@ -42,21 +45,47 @@ onMounted(() => {
     dragingNode = e.target.id
   })
 
-  graph.on(ComboEvent.DROP, (e) => {
-    if (dragingNode) {
-      const edges = graph.getRelatedEdgesData(dragingNode)
-      graph.removeEdgeData(edges.map((e) => e.id))
-    }
-    graph.draw()
+  window.graph = graph
+  graph.on(NodeEvent.CLICK, (e) => {
+    const id = e.target.id
+    const node = graph.getElementData(id)
+    console.log(node)
   })
 
+  graph.on(ComboEvent.CLICK, (e) => {
+    const id = e.target.id
+    const node = graph.getElementData(id)
+    console.log(node)
+  })
   graph.render()
 })
+
+function appendChild() {
+  const node = graph.getElementData('node4')
+  if (!node) return
+  const nodeMust = node as NodeData
+  const newNode = {
+    id: uniqueId() + '' + uniqueId(),
+    style: {
+      x: nodeMust.style!.x! + 30,
+      y: nodeMust.style!.y! + 30
+    }
+  }
+  graph.addChildrenData(node.id!, [newNode])
+
+  graph.draw()
+}
+
+import CvsTest from './CvsTest.vue'
 </script>
 
 <template>
-  <h1>Example for drag a node into another combo, correctly delete the old edges</h1>
-  <div id="container" style="width: 100%; height: 100%" />
+  <div style="display: flex; flex-direction: column">
+    <h1>Example for drag a node into another combo, correctly delete the old edges</h1>
+    <div id="container" style="width: 100%; height: 100%" />
+    <button @click="appendChild">append a child</button>
+  </div>
+  <!-- <CvsTest /> -->
 </template>
 
 <style scoped>

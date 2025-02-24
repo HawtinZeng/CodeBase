@@ -1,0 +1,19 @@
+{
+  "name": "@zenghawtin/utils",
+  "version": "1.0.0",
+  "main": "generatePort.js",
+  "private": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup generatePort.js --file ./dist/index.js --format cjs"
+  },
+  "files": [
+    "./dist/*"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "rollup": "^4.24.0"
+  }
+}
