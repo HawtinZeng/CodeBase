@@ -2,4 +2,4 @@
 
 ## Start from a easy example:
 
-![out](A:\Files\CodeRepo\CodeBase\WebGL100Days\3.10.2025\out.png)
+![Plaster scene](A:\Files\CodeRepo\CodeBase\WebGL100Days\3.10.2025\out.png)
