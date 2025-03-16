@@ -14,6 +14,7 @@ export default defineManifest(async (env) => ({
   name: "link-downloader",
   version: `${major}.${minor}.${patch}.${label}`,
   version_name: version,
+  permissions: ["downloads"],
   action: { default_popup: "index.html" },
   content_scripts: [
     {
