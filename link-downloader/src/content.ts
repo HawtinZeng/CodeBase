@@ -1,7 +1,17 @@
-const includes: string[] = [".html", "/", ".js", ".css", ".pdf"];
+// @ts-nocheck
 export function linkFilter(
   allLinks: Array<HTMLAnchorElement>,
-  includes: string[] = [".html", "/", ".js", ".css", ".pdf"],
+  includes: string[] = [
+    ".html",
+    "/",
+    ".js",
+    ".css",
+    ".pdf",
+    ".frag",
+    ".vert",
+    ".obj",
+    ".mtl",
+  ],
   excludes: string[] = ["https://learnwebgl.brown37.net/"]
 ) {
   return allLinks.filter((a) => {
@@ -10,7 +20,7 @@ export function linkFilter(
     );
   });
 }
-
+// @ts-ignore
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.action === "loadLinksData") {
     const allLinks = document.getElementsByTagName("a");

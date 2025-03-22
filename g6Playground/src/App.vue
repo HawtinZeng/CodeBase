@@ -49,7 +49,6 @@ onMounted(() => {
   graph.on(NodeEvent.CLICK, (e) => {
     const id = e.target.id
     const node = graph.getElementData(id)
-    console.log(node)
   })
 
   graph.on(ComboEvent.CLICK, (e) => {

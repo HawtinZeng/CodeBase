@@ -133,19 +133,21 @@ var StringParser = function () {
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   this.isDelimiter = function (c) {
     return (
-      c === ' ' ||
-      c === '\t' ||
-      c === '(' ||
-      c === ')' ||
-      c === '"'  ||
+      c === " " ||
+      c === "\t" ||
+      c === "(" ||
+      c === ")" ||
+      c === '"' ||
       c === "'"
     );
   };
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   this.skipDelimiters = function () {
-    while (this.index < this.str.length &&
-        this.isDelimiter(this.str.charAt(this.index))) {
+    while (
+      this.index < this.str.length &&
+      this.isDelimiter(this.str.charAt(this.index))
+    ) {
       this.index += 1;
     }
   };
@@ -153,8 +155,7 @@ var StringParser = function () {
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   this.getWordLength = function (start) {
     var i = start;
-    while (i < this.str.length &&
-        !this.isDelimiter(this.str.charAt(i))) {
+    while (i < this.str.length && !this.isDelimiter(this.str.charAt(i))) {
       i += 1;
     }
     return i - start;
@@ -163,7 +164,7 @@ var StringParser = function () {
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   this.skipToNextWord = function () {
     this.skipDelimiters();
-    this.index += (this.getWordLength(this.index) + 1);
+    this.index += this.getWordLength(this.index) + 1;
   };
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,7 +176,7 @@ var StringParser = function () {
       return null;
     }
     word = this.str.substr(this.index, n);
-    this.index += (n + 1);
+    this.index += n + 1;
 
     return word;
   };
@@ -223,7 +224,6 @@ var StringParser = function () {
   this.getRestOfLine = function () {
     return this.str.substr(this.index);
   };
-
 };
 
 //=========================================================================
@@ -244,18 +244,17 @@ function getMaterialFileNamesFromOBJ(model_description) {
   sp = new StringParser();
 
   // Break up the input into individual lines of text.
-  lines = model_description.split('\n');
+  lines = model_description.split("\n");
 
   for (which_line = 0; which_line < lines.length; which_line += 1) {
-
     sp.init(lines[which_line]);
     command = sp.getWord();
 
     if (command) {
       switch (command) {
-      case 'mtllib': // Save the material data filename for later retrieval
-        material_filename_list.push(sp.getWord());
-        break;
+        case "mtllib": // Save the material data filename for later retrieval
+          material_filename_list.push(sp.getWord());
+          break;
       }
     }
   }
@@ -274,7 +273,6 @@ function getMaterialFileNamesFromOBJ(model_description) {
  * @return a dictionary of models. The model name is the key.
  */
 function createModelsFromOBJ(model_description, materials_dictionary, out) {
-
   var model_dictionary = {};
   var z_factor = 1.0;
 
@@ -351,87 +349,114 @@ function createModelsFromOBJ(model_description, materials_dictionary, out) {
 
   //-----------------------------------------------------------------------
   function create_models() {
-    var sp, lines, which_line, command, model_name, current_model,
-      current_material_file, current_material, vertices, x, y, z,
+    var sp,
+      lines,
+      which_line,
+      command,
+      model_name,
+      current_model,
+      current_material_file,
+      current_material,
+      vertices,
+      x,
+      y,
+      z,
       dot_position;
 
     // Create StringParser
     sp = new StringParser();
 
     // Break up the input into individual lines of text.
-    lines = model_description.split('\n');
+    lines = model_description.split("\n");
 
     // The vertices are broken into sections for each model, but face
     // indexes for vertices are global for the entire vertex list.
     // Therefore, keep a single list of vertices for all models.
     vertices = [];
     // OBJ vertices are indexed starting at 1 (not 0).
-    vertices.push([]);  // empty vertex for [0].
+    vertices.push([]); // empty vertex for [0].
 
     for (which_line = 0; which_line < lines.length; which_line += 1) {
-
       sp.init(lines[which_line]);
 
       command = sp.getWord();
 
       if (command) {
-
         switch (command) {
-          case '#':
+          case "#":
             break; // Skip comments
 
-          case 'mtllib': // Save the material data filename for later retrieval
+          case "mtllib": // Save the material data filename for later retrieval
             current_material_file = sp.getWord();
             // Remove the filename extension
-            dot_position = current_material_file.lastIndexOf('.');
+            dot_position = current_material_file.lastIndexOf(".");
             if (dot_position > 0) {
-              current_material_file = current_material_file.substr(0, dot_position);
+              current_material_file = current_material_file.substr(
+                0,
+                dot_position
+              );
             }
             break;
 
-          case 'o':
-          case 'g': // Read Object name and create a new Model
+          case "o":
+          case "g": // Read Object name and create a new Model
             model_name = sp.getWord();
             current_model = new Model01(model_name);
             model_dictionary[model_name] = current_model;
             break;
 
-          case 'v':  // Read vertex
+          case "v": // Read vertex
             x = sp.getFloat();
             y = sp.getFloat();
             z = sp.getFloat() * z_factor;
             vertices.push(new Float32Array([x, y, z]));
             break;
 
-          case 'p':  // Read one or more points
-            parse_points(sp, current_model, current_material_file, current_material, vertices);
+          case "p": // Read one or more points
+            parse_points(
+              sp,
+              current_model,
+              current_material_file,
+              current_material,
+              vertices
+            );
             break;
 
-          case 'l':  // Read one or more lines
-            parse_lines(sp, current_model, current_material_file, current_material, vertices);
+          case "l": // Read one or more lines
+            parse_lines(
+              sp,
+              current_model,
+              current_material_file,
+              current_material,
+              vertices
+            );
             break;
 
-          case 'usemtl': // Material name - future faces have this material
+          case "usemtl": // Material name - future faces have this material
             current_material = sp.getWord();
             break;
 
-          case 'f': // Read face, which may contain multiple triangles
-            parse_face(sp, current_model, current_material_file, current_material, vertices);
+          case "f": // Read face, which may contain multiple triangles
+            parse_face(
+              sp,
+              current_model,
+              current_material_file,
+              current_material,
+              vertices
+            );
             break;
-
         } // end switch
       } // end of if (command)
-    }// end looping over each line
+    } // end looping over each line
 
     return true;
-
   }
 
   //------------------------------------------------------------------------
   // body of create_model_from_obj()
 
   if (!model_description) {
-    out.displayError('Model data for ' + model_description + ' is empty.');
+    out.displayError("Model data for " + model_description + " is empty.");
     return [null, null];
   }
 
@@ -439,7 +464,7 @@ function createModelsFromOBJ(model_description, materials_dictionary, out) {
 
   // Display the models that were created to the console window.
   // This can be comments out is you don't want the confirmation.
-  out.displayInfo('Created models: ' + Object.keys(model_dictionary));
+  out.displayInfo("Created models: " + Object.keys(model_dictionary));
 
   return model_dictionary;
 }
@@ -479,75 +504,78 @@ function createObjModelMaterials(data_string) {
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   function parseDefinition(data_string) {
-    var lineIndex, sp, command, lines, material_name, current_material,
-        dot_position;
+    var lineIndex,
+      sp,
+      command,
+      lines,
+      material_name,
+      current_material,
+      dot_position;
 
     current_material = null;
 
     // Break up into lines and store them as array
-    lines = data_string.split('\n');
+    lines = data_string.split("\n");
 
     sp = new StringParser();
 
     for (lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
-
       sp.init(lines[lineIndex]);
 
       command = sp.getWord();
 
       if (command) {
-
         switch (command) {
-        case '#':  // Skip comments
-          break;
+          case "#": // Skip comments
+            break;
 
-        case 'newmtl':  // Start a new material definition.
-          material_name = sp.getWord();
+          case "newmtl": // Start a new material definition.
+            material_name = sp.getWord();
             // Remove the filename extension
-          dot_position = material_name.lastIndexOf('.');
-          if (dot_position > 0) {
-            material_name = material_name.substr(0, dot_position);
-          }
+            dot_position = material_name.lastIndexOf(".");
+            if (dot_position > 0) {
+              material_name = material_name.substr(0, dot_position);
+            }
 
-          current_material = new ModelMaterial(material_name);
-          material_dictionary[material_name] = current_material;
-          break;
+            current_material = new ModelMaterial(material_name);
+            material_dictionary[material_name] = current_material;
+            break;
 
-        case 'Ns':  //
-          current_material.Ns = sp.getFloat();
-          break;
+          case "Ns": //
+            current_material.Ns = sp.getFloat();
+            break;
 
-        case 'Ka':  // Read the ambient color
-          current_material.Ka = parseRGB(sp);
-          break;
+          case "Ka": // Read the ambient color
+            current_material.Ka = parseRGB(sp);
+            break;
 
-        case 'Kd':  // Read the diffuse color
-          current_material.Kd = parseRGB(sp);
-          break;
+          case "Kd": // Read the diffuse color
+            current_material.Kd = parseRGB(sp);
+            break;
 
-        case 'Ks':  // Read the specular color
-          current_material.Ks = parseRGB(sp);
-          break;
+          case "Ks": // Read the specular color
+            current_material.Ks = parseRGB(sp);
+            break;
 
-        case 'Ni':  // Read the specular color
-          current_material.Ni = sp.getFloat();
-          break;
+          case "Ni": // Read the specular color
+            current_material.Ni = sp.getFloat();
+            break;
 
-        case 'd':  // Read the ???
-          current_material.illum = sp.getFloat();
-          break;
+          case "d": // Read the ???
+            current_material.illum = sp.getFloat();
+            break;
 
-        case 'illum':  // Read the illumination coefficient
-          current_material.illum = sp.getInt();
-          break;
+          case "illum": // Read the illumination coefficient
+            current_material.illum = sp.getInt();
+            break;
 
-        case 'map_Kd': // Read the name of the texture map image
-          current_material.map_Kd = sp.getRestOfLine();
-          break;
+          case "map_Kd": // Read the name of the texture map image
+            current_material.map_Kd = sp.getRestOfLine();
+            break;
         } // end switch
       }
     } // end for-loop for processing lines
-  // end parseDefinition
+    // end parseDefinition
   }
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

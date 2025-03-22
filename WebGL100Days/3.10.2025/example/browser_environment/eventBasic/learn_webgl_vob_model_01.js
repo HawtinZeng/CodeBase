@@ -41,7 +41,6 @@
 // model definition and particular WebGL shaders.
 //-------------------------------------------------------------------------
 var Learn_webgl_vob_model_01 = function (gl, program, model, out, controls) {
-
   // Variables to remember so the model can be rendered.
   var number_triangles = 0;
   var triangles_vertex_buffer_id = null;
@@ -66,7 +65,7 @@ var Learn_webgl_vob_model_01 = function (gl, program, model, out, controls) {
 
     buffer_id = gl.createBuffer();
     if (!buffer_id) {
-      out.displayError('Failed to create the buffer object for ' + model.name);
+      out.displayError("Failed to create the buffer object for " + model.name);
       return null;
     }
 
@@ -81,8 +80,21 @@ var Learn_webgl_vob_model_01 = function (gl, program, model, out, controls) {
 
   //-----------------------------------------------------------------------
   function _buildVobBuffers() {
-    var j, k, m, nv, nc, numberVertices, triangle, triangle_color, vertex,
-      line, line_color, point, point_color, vertices3, colors4;
+    var j,
+      k,
+      m,
+      nv,
+      nc,
+      numberVertices,
+      triangle,
+      triangle_color,
+      vertex,
+      line,
+      line_color,
+      point,
+      point_color,
+      vertices3,
+      colors4;
 
     // Build the buffers for the triangles
     if (model.triangle_list.length > 0) {
@@ -170,11 +182,12 @@ var Learn_webgl_vob_model_01 = function (gl, program, model, out, controls) {
   //-----------------------------------------------------------------------
   function _getLocationOfShaderVariables() {
     // Get the location of the shader variables
-    a_Vertex = gl.getAttribLocation(program, 'a_Vertex');
-    a_Color = gl.getAttribLocation(program, 'a_Color');
+    a_Vertex = gl.getAttribLocation(program, "a_Vertex");
+    a_Color = gl.getAttribLocation(program, "a_Color");
   }
 
-  //-----------------------------------------------------------------------
+  //----------------
+  // -------------------------------------------------------
   // These one-time tasks set up the rendering of the models.
   _buildVobBuffers();
   _getLocationOfShaderVariables();
@@ -197,7 +210,6 @@ var Learn_webgl_vob_model_01 = function (gl, program, model, out, controls) {
 
   //-----------------------------------------------------------------------
   this.render = function (gl, transform_location, transform) {
-
     // Set the transform for all the faces, lines, and points
     gl.uniformMatrix4fv(transform_location, false, transform);
 
@@ -261,5 +273,4 @@ var Learn_webgl_vob_model_01 = function (gl, program, model, out, controls) {
       gl.drawArrays(gl.POINTS, 0, number_points);
     }
   };
-
 };
