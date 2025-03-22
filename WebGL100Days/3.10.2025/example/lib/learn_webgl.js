@@ -30,9 +30,14 @@
  * @param webgl_directive (optional) A runestone webgl_directive.
  * @constructor
  */
-function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
-                     control_list, webgl_directive) {
-
+function Learn_webgl(
+  canvas_id,
+  scene_object,
+  model_list,
+  shader_list,
+  control_list,
+  webgl_directive
+) {
   //-----------------------------------------------------------------------
   // Private properties of a Learn_webgl object
   var self = this;
@@ -42,7 +47,7 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
   var vshaders = {};
   var fshaders = {};
 
-  var model_data_dictionary = {};  // text data from model files
+  var model_data_dictionary = {}; // text data from model files
   var materials_data_dictionary = {}; // text data from materials files
 
   var model_dictionary = {}; // models
@@ -64,9 +69,13 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
    * @private
    */
   function _initializeRendering() {
-
-    out.displayInfo("In _initializeRendering: " + number_retrieved + " of " +
-                downloads_needed + " files have been retrieved");
+    out.displayInfo(
+      "In _initializeRendering: " +
+        number_retrieved +
+        " of " +
+        downloads_needed +
+        " files have been retrieved"
+    );
     if (number_retrieved >= downloads_needed) {
       out.displayInfo("All files have been retrieved!");
 
@@ -76,7 +85,9 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
       material_keys = Object.keys(materials_data_dictionary);
       for (j = 0; j < material_keys.length; j += 1) {
         material_filename = material_keys[j];
-        more_models = createObjModelMaterials(materials_data_dictionary[material_filename]);
+        more_models = createObjModelMaterials(
+          materials_data_dictionary[material_filename]
+        );
         materials_dictionary[material_filename] = more_models;
       }
 
@@ -84,12 +95,22 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
       model_names = Object.keys(model_data_dictionary);
       for (j = 0; j < model_names.length; j += 1) {
         name = model_names[j];
-        more_models = createModelsFromOBJ(model_data_dictionary[name], materials_dictionary, out);
-        model_dictionary = $.extend( model_dictionary, more_models);
+        more_models = createModelsFromOBJ(
+          model_data_dictionary[name],
+          materials_dictionary,
+          out
+        );
+        model_dictionary = $.extend(model_dictionary, more_models);
       }
 
       // Create a Scene object which does all the rendering and events
-      scene = new window[scene_object](self, vshaders, fshaders, model_dictionary, controls);
+      scene = new window[scene_object](
+        self,
+        vshaders,
+        fshaders,
+        model_dictionary,
+        controls
+      );
       scene.render();
     }
   }
@@ -105,9 +126,9 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     var dot_position, slash_position, path, root, extension;
 
     // Get the extension
-    dot_position = file_name.lastIndexOf('.');
+    dot_position = file_name.lastIndexOf(".");
     if (dot_position > 0) {
-      extension = file_name.substr(dot_position+1);
+      extension = file_name.substr(dot_position + 1);
       root = file_name.substr(0, dot_position);
     } else {
       extension = "";
@@ -115,9 +136,9 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     }
 
     // Get the path
-    slash_position = root.lastIndexOf('/');
+    slash_position = root.lastIndexOf("/");
     if (slash_position > 0) {
-      path = root.substr(0,slash_position + 1);
+      path = root.substr(0, slash_position + 1);
       root = root.substr(slash_position + 1);
     } else {
       path = "";
@@ -135,28 +156,27 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
    * @private
    */
   function _downloadShader(shader_filename) {
+    $.get(shader_filename, function (data) {
+      var file_extension, name, file_parts;
 
-    $.get(shader_filename,
-      function (data) {
-        var file_extension, name, file_parts;
+      out.displayInfo("Shader '" + shader_filename + "' has been downloaded.");
+      number_retrieved += 1;
 
-        out.displayInfo("Shader '" + shader_filename + "' has been downloaded.");
-        number_retrieved += 1;
+      file_parts = self.parseFilename(shader_filename);
+      name = file_parts[1];
+      file_extension = file_parts[2];
 
-        file_parts = self.parseFilename(shader_filename);
-        name = file_parts[1];
-        file_extension = file_parts[2];
-
-        if (file_extension === 'vert') {
-          vshaders[name] = data;
-        } else if (file_extension === 'frag') {
-          fshaders[name] = data;
-        } else {
-          out.displayError('Invalid shader file name extension: the name was ' + shader_filename);
-        }
-        _initializeRendering();
+      if (file_extension === "vert") {
+        vshaders[name] = data;
+      } else if (file_extension === "frag") {
+        fshaders[name] = data;
+      } else {
+        out.displayError(
+          "Invalid shader file name extension: the name was " + shader_filename
+        );
       }
-    );
+      _initializeRendering();
+    });
   }
 
   //-----------------------------------------------------------------------
@@ -190,25 +210,25 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     path_to_model = file_parts[0];
     material_filename = path_to_model + material_filename;
 
-    myget = $.get(material_filename,
-      function (data) {
-        var materials_key;
+    myget = $.get(material_filename, function (data) {
+      var materials_key;
 
-        number_retrieved += 1;
-        out.displayInfo("Materials file '" + material_filename + "' has been downloaded.");
-
-        // Store the data for later processing.
-        materials_key = self.parseFilename(material_filename)[1];
-        materials_data_dictionary[materials_key] = data;
-
-        _initializeRendering();
-      }
+      number_retrieved += 1;
+      out.displayInfo(
+        "Materials file '" + material_filename + "' has been downloaded."
       );
-    myget.fail(
-      function () {
-        out.displayInfo("The get for the materials file '" + material_filename + "' failed.");
-      }
-    );
+
+      // Store the data for later processing.
+      materials_key = self.parseFilename(material_filename)[1];
+      materials_data_dictionary[materials_key] = data;
+
+      _initializeRendering();
+    });
+    myget.fail(function () {
+      out.displayInfo(
+        "The get for the materials file '" + material_filename + "' failed."
+      );
+    });
   }
 
   //-----------------------------------------------------------------------
@@ -218,34 +238,33 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
    * @private
    */
   function _downloadModel(model_filename) {
+    $.get(model_filename, function (data) {
+      var file_name, material_filename_list;
 
-    $.get(model_filename,
-      function (data) {
-        var file_name, material_filename_list;
+      number_retrieved += 1;
+      out.displayInfo("Model '" + model_filename + "' has been downloaded.");
 
-        number_retrieved += 1;
-        out.displayInfo("Model '" + model_filename + "' has been downloaded.");
+      file_name = self.parseFilename(model_filename)[1];
 
-        file_name = self.parseFilename(model_filename)[1];
+      // Remember the data in a dictionary. The key is the file name with
+      // the file extension removed.
+      model_data_dictionary[file_name] = data;
 
-        // Remember the data in a dictionary. The key is the file name with
-        // the file extension removed.
-        model_data_dictionary[file_name] = data;
+      material_filename_list = getMaterialFileNamesFromOBJ(data);
 
-        material_filename_list = getMaterialFileNamesFromOBJ(data);
+      out.displayInfo(
+        "Found these material MTL files: " + Object.keys(material_filename_list)
+      );
 
-        out.displayInfo('Found these material MTL files: ' + Object.keys(material_filename_list));
-
-        // Now get all of the material files and increase the number of
-        // files that are needed before execution can begin.
-        downloads_needed += material_filename_list.length;
-        var j;
-        for (j = 0; j < material_filename_list.length; j += 1) {
-          _downloadMaterialsFile(model_filename, material_filename_list[j]);
-        }
-        _initializeRendering();
+      // Now get all of the material files and increase the number of
+      // files that are needed before execution can begin.
+      downloads_needed += material_filename_list.length;
+      var j;
+      for (j = 0; j < material_filename_list.length; j += 1) {
+        _downloadMaterialsFile(model_filename, material_filename_list[j]);
       }
-    );
+      _initializeRendering();
+    });
   }
 
   //-----------------------------------------------------------------------
@@ -273,10 +292,12 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
 
     canvas = document.getElementById(canvas_id);
     if (!canvas || canvas.nodeName !== "CANVAS") {
-      out.displayError('Fatal error: Canvas "' + canvas_id + '" could not be found');
+      out.displayError(
+        'Fatal error: Canvas "' + canvas_id + '" could not be found'
+      );
     } else {
       // Always set the canvas 2D environment to the size of the window
-      canvas.width  = canvas.clientWidth;
+      canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
     }
     return canvas;
@@ -292,7 +313,7 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
   self.getWebglContext = function (canvas) {
     var context;
 
-    context = canvas.getContext('webgl');
+    context = canvas.getContext("webgl");
     if (!context) {
       out.displayError("No WebGL context could be found.");
     }
@@ -322,7 +343,9 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
         typeName = "Fragment Shader";
         break;
       default:
-        self.out.displayError("Invalid type of shader in createAndCompileShader()");
+        self.out.displayError(
+          "Invalid type of shader in createAndCompileShader()"
+        );
         return null;
     }
 
@@ -343,7 +366,9 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     if (!compiled) {
       // There are errors, so display them
       var errors = gl.getShaderInfoLog(shader);
-      out.displayError('Failed to compile ' + typeName + ' with these errors:' + errors);
+      out.displayError(
+        "Failed to compile " + typeName + " with these errors:" + errors
+      );
       gl.deleteShader(shader);
       return null;
     }
@@ -362,8 +387,16 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
   //
   self.createProgram = function (gl, vertexShaderCode, fragmentShaderCode) {
     // Create the 2 required shaders
-    var vertexShader = self.createAndCompileShader(gl, gl.VERTEX_SHADER, vertexShaderCode);
-    var fragmentShader = self.createAndCompileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderCode);
+    var vertexShader = self.createAndCompileShader(
+      gl,
+      gl.VERTEX_SHADER,
+      vertexShaderCode
+    );
+    var fragmentShader = self.createAndCompileShader(
+      gl,
+      gl.FRAGMENT_SHADER,
+      fragmentShaderCode
+    );
     if (!vertexShader || !fragmentShader) {
       return null;
     }
@@ -371,7 +404,7 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     // Create a gl program object
     var program = gl.createProgram();
     if (!program) {
-      out.displayError('Fatal error: Failed to create a program object');
+      out.displayError("Fatal error: Failed to create a program object");
       return null;
     }
 
@@ -387,7 +420,7 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     if (!linked) {
       // There were errors, so get the errors and display them.
       var error = gl.getProgramInfoLog(program);
-      out.displayError('Fatal error: Failed to link program: ' + error);
+      out.displayError("Fatal error: Failed to link program: " + error);
       gl.deleteProgram(program);
       gl.deleteShader(fragmentShader);
       gl.deleteShader(vertexShader);
@@ -432,25 +465,25 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     text = code_mirror.getValue();
 
     //   # Extract only the body of the HTML code
-    start_pos = text.indexOf('<body');
-    start_pos = text.indexOf('>', start_pos) + 1;
+    start_pos = text.indexOf("<body");
+    start_pos = text.indexOf(">", start_pos) + 1;
     end_pos = text.indexOf("</body>", start_pos);
     str_length = end_pos - start_pos;
     if (start_pos >= 6 && str_length > 0) {
-      text = text.substr(start_pos,str_length);
+      text = text.substr(start_pos, str_length);
 
       // Don't reload any scripts, so remove them from the text
       // Remove single line <scripts> first
       var regexp = /<script.*script>\n/gi;
       var matches_array = text.match(regexp);
-      for (j = 0; j< matches_array.length; j += 1) {
+      for (j = 0; j < matches_array.length; j += 1) {
         text = text.replace(matches_array[j], "");
       }
 
       // Remove multiple line <scripts> now
       regexp = /<script(.|\n)*script>\n/gi;
       matches_array = text.match(regexp);
-      for (j = 0; j< matches_array.length; j += 1) {
+      for (j = 0; j < matches_array.length; j += 1) {
         text = text.replace(matches_array[j], "");
       }
 
@@ -479,16 +512,18 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
       // existing code with matching names.
       return eval(text);
     } catch (error) {
-      var parts = error.stack.split(':');
+      var parts = error.stack.split(":");
       var errorType = parts[0];
-      var errorMessage = parts[1].substr(0, parts[1].indexOf('('));
-      var subparts = errorMessage.split(' at ');
+      var errorMessage = parts[1].substr(0, parts[1].indexOf("("));
+      var subparts = errorMessage.split(" at ");
       errorMessage = subparts[0];
       var errorLocation = subparts[1];
-      out.displayError("Error: " + errorType + ': "' + errorMessage + '" in ' + errorLocation);
+      out.displayError(
+        "Error: " + errorType + ': "' + errorMessage + '" in ' + errorLocation
+      );
       return this;
     }
-  }
+  };
 
   //-----------------------------------------------------------------------
   function _updateShader(file_name, file_extension, code_mirror) {
@@ -499,10 +534,10 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
 
     // Update the shader data definitions
     switch (file_extension) {
-      case 'vert':
+      case "vert":
         vshaders[file_name] = text;
         break;
-      case 'frag':
+      case "frag":
         fshaders[file_name] = text;
         break;
     }
@@ -523,7 +558,7 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
       var j;
       var my_file_names = webgl_directive.file_names;
       var my_code_mirrors = webgl_directive.code_mirrors;
-      for (j=0; j < my_code_mirrors.length; j += 1) {
+      for (j = 0; j < my_code_mirrors.length; j += 1) {
         file_parts = self.parseFilename(my_file_names[j]);
         file_extension = file_parts[2];
         file_name = file_parts[1];
@@ -531,23 +566,27 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
         switch (file_extension) {
           case "html":
             _updateHTML(file_name, my_code_mirrors[j]);
-            out.displayInfo("Updating definition of html code '" + file_name + "'");
+            out.displayInfo(
+              "Updating definition of html code '" + file_name + "'"
+            );
             break;
           case "js":
             // Get the current text from the codemirror editor
             text = my_code_mirrors[j].getValue();
 
             // Find the name of the function
-            window_index = text.indexOf('window.');
-            equal_index = text.indexOf('=', window_index);
-            function_name = text.slice(window_index+7,equal_index).trim();
+            window_index = text.indexOf("window.");
+            equal_index = text.indexOf("=", window_index);
+            function_name = text.slice(window_index + 7, equal_index).trim();
 
             // The code is stored in a property of the window object. Delete the property.
             delete window[function_name];
 
             // Evaluate the new code in the global context
             doEvalInContext.call(window, text, out);
-            out.displayInfo("Updating definition of javascript code '" + file_name + "'");
+            out.displayInfo(
+              "Updating definition of javascript code '" + file_name + "'"
+            );
             break;
           case "obj":
             _updateOBJ(file_name, my_code_mirrors[j]);
@@ -556,10 +595,17 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
           case "vert":
           case "frag":
             _updateShader(file_name, file_extension, my_code_mirrors[j]);
-            out.displayInfo("Updating definition of shader '" + file_name + "'");
+            out.displayInfo(
+              "Updating definition of shader '" + file_name + "'"
+            );
             break;
           default:
-            out.displayInfo("unrecognized edit file type '" + file_extension + " for file " + file_name );
+            out.displayInfo(
+              "unrecognized edit file type '" +
+                file_extension +
+                " for file " +
+                file_name
+            );
         }
       }
     }
@@ -570,8 +616,17 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
 
   //-----------------------------------------------------------------------
   self.downloadAll = function () {
-    var j, k, n, a_script, all_files, lines, start, end, inner_string, names,
-        a_line;
+    var j,
+      k,
+      n,
+      a_script,
+      all_files,
+      lines,
+      start,
+      end,
+      inner_string,
+      names,
+      a_line;
 
     // Get the html code that defines the "webgl_canvas" <div>
     var id = "#" + learn_webgl_id + "_webgl_canvas";
@@ -587,25 +642,27 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     for (j = 0; j < all_scripts.length; j += 1) {
       a_script = all_scripts[j];
       if (a_script.innerHTML.length === 0) {
-        all_files.push( a_script.src );
+        all_files.push(a_script.src);
       } else {
-        lines = a_script.innerHTML.split(';');
+        lines = a_script.innerHTML.split(";");
 
         // find the lines that have a "variable = [ list ];"
         for (k = 0; k < lines.length; k += 1) {
           a_line = lines[k];
-          if (a_line.indexOf("var models") >= 0 ||
-              a_line.indexOf("var shaders") >= 0) {
-            start = lines[k].indexOf('[');
+          if (
+            a_line.indexOf("var models") >= 0 ||
+            a_line.indexOf("var shaders") >= 0
+          ) {
+            start = lines[k].indexOf("[");
             if (start >= 0) {
-              end = lines[k].indexOf(']', start);
+              end = lines[k].indexOf("]", start);
               if (end >= 1) {
                 inner_string = lines[k].slice(start + 1, end).trim();
-                names = inner_string.split(',');
+                names = inner_string.split(",");
                 for (n = 0; n < names.length; n += 1) {
                   names[n] = names[n].trim();
                   // Remove the leading and trailing quotes
-                  names[n] = names[n].slice(1,-1);
+                  names[n] = names[n].slice(1, -1);
                   all_files.push(names[n]);
                 }
               }
@@ -617,7 +674,7 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
     console.log("allfiles = ", all_files);
 
     // Download all the files in the list
-    webgl_directive.downloadAllFiles( all_files, self );
+    webgl_directive.downloadAllFiles(all_files, self);
   };
 
   //-----------------------------------------------------------------------
@@ -650,17 +707,19 @@ function Learn_webgl(canvas_id, scene_object, model_list, shader_list,
  * @param out An object for displaying output
  */
 function doEvalInContext(js_code, out) {
-    try {
-      // Evaluate the text in the global context. This will replace any
-      // existing code with matching names.
-      return eval(js_code);
-    } catch (error) {
-      var parts = error.stack.split(':');
-      var errorType = parts[0];
-      var errorMessage = parts[1].substr(0, parts[1].indexOf('('));
-      var subparts = errorMessage.split(' at ');
-      errorMessage = subparts[0];
-      var errorLocation = subparts[1];
-      out.displayError("Error: " + errorType + ': "' + errorMessage + '" in ' + errorLocation);
-    }
+  try {
+    // Evaluate the text in the global context. This will replace any
+    // existing code with matching names.
+    return eval(js_code);
+  } catch (error) {
+    var parts = error.stack.split(":");
+    var errorType = parts[0];
+    var errorMessage = parts[1].substr(0, parts[1].indexOf("("));
+    var subparts = errorMessage.split(" at ");
+    errorMessage = subparts[0];
+    var errorLocation = subparts[1];
+    out.displayError(
+      "Error: " + errorType + ': "' + errorMessage + '" in ' + errorLocation
+    );
+  }
 }

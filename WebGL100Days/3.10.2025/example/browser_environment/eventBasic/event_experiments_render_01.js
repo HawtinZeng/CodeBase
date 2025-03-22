@@ -43,9 +43,13 @@
 // Build, create, copy and render 3D objects specific to a particular
 // model definition and particular WebGL shaders.
 //-------------------------------------------------------------------------
-var Scene_event_experiments_render = function (learn, vshaders_dictionary,
-                                fshaders_dictionary, models, controls) {
-
+var Scene_event_experiments_render = function (
+  learn,
+  vshaders_dictionary,
+  fshaders_dictionary,
+  models,
+  controls
+) {
   var self = this; // Store a local reference to the new object.
 
   //-----------------------------------------------------------------------
@@ -59,11 +63,16 @@ var Scene_event_experiments_render = function (learn, vshaders_dictionary,
 
     // Build individual transforms
     matrix.setIdentity(transform);
-    matrix.rotate(rotate_x_matrix, self.angle_x, 1, 0, 0);
-    matrix.rotate(rotate_y_matrix, self.angle_y, 0, 1, 0);
+    matrix.rotate(rotate_x_matrix, self.angle_x, 1, 0, 0); // rotate with x axis
+    matrix.rotate(rotate_y_matrix, self.angle_y, 0, 1, 0); // rotate with y axis
 
     // Combine the transforms into a single transformation
-    matrix.multiplySeries(transform, transform, rotate_x_matrix, rotate_y_matrix);
+    matrix.multiplySeries(
+      transform,
+      transform,
+      rotate_x_matrix,
+      rotate_y_matrix
+    );
 
     // Draw each model
     model_names = Object.keys(model_VOBs);
@@ -91,10 +100,10 @@ var Scene_event_experiments_render = function (learn, vshaders_dictionary,
     model_VOBs = null;
 
     // Remove all event handlers
-    var id = '#' + canvas_id;
-    $( id ).unbind( "mousedown", events.mouse_drag_started );
-    $( id ).unbind( "mouseup", events.mouse_drag_ended );
-    $( id ).unbind( "mousemove", events.mouse_dragged );
+    var id = "#" + canvas_id;
+    $(id).unbind("mousedown", events.mouse_drag_started);
+    $(id).unbind("mouseup", events.mouse_drag_ended);
+    $(id).unbind("mousemove", events.mouse_dragged);
     events.removeAllEventHandlers();
     events = null;
 
@@ -137,7 +146,11 @@ var Scene_event_experiments_render = function (learn, vshaders_dictionary,
   }
 
   // Set up the rendering program and set the state of webgl
-  program = learn.createProgram(gl, vshaders_dictionary["shader05"], fshaders_dictionary["shader05"]);
+  program = learn.createProgram(
+    gl,
+    vshaders_dictionary["shader05"],
+    fshaders_dictionary["shader05"]
+  );
   gl.useProgram(program);
 
   // Enable hidden-surface removal
@@ -150,7 +163,12 @@ var Scene_event_experiments_render = function (learn, vshaders_dictionary,
   var j, key_list;
   key_list = Object.keys(models);
   for (j = 0; j < key_list.length; j += 1) {
-    model_VOBs[key_list[j]] = new Learn_webgl_vob_model_01(gl, program, models[key_list[j]], out);
+    model_VOBs[key_list[j]] = new Learn_webgl_vob_model_01(
+      gl,
+      program,
+      models[key_list[j]],
+      out
+    );
   }
 
   // Set up callbacks for user and timer events
@@ -158,9 +176,8 @@ var Scene_event_experiments_render = function (learn, vshaders_dictionary,
   events = new Event_experiments_events_01(self, controls);
   events.animate();
 
-  var id = '#' + canvas_id;
-  $( id ).mousedown( events.mouse_drag_started );
-  $( id ).mouseup( events.mouse_drag_ended );
-  $( id ).mousemove( events.mouse_dragged );
+  var id = "#" + canvas_id;
+  $(id).mousedown(events.mouse_drag_started);
+  $(id).mouseup(events.mouse_drag_ended);
+  $(id).mousemove(events.mouse_dragged);
 };
-

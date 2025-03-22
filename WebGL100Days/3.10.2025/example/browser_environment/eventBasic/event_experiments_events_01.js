@@ -33,12 +33,10 @@
 
 //-------------------------------------------------------------------------
 window.Event_experiments_events_01 = function (scene, control_id_list) {
-
   var self = this; // Store a local reference to the new object.
 
   //-----------------------------------------------------------------------
   self.mouse_drag_started = function (event) {
-
     //console.log("started mouse drag event x,y = " + event.clientX + " " + event.clientY + "  " + event.which);
     start_of_mouse_drag = event;
     event.preventDefault();
@@ -50,7 +48,6 @@ window.Event_experiments_events_01 = function (scene, control_id_list) {
 
   //-----------------------------------------------------------------------
   self.mouse_drag_ended = function (event) {
-
     //console.log("ended mouse drag event x,y = " + event.clientX + " " + event.clientY + "  " + event.which);
     start_of_mouse_drag = null;
 
@@ -86,13 +83,24 @@ window.Event_experiments_events_01 = function (scene, control_id_list) {
     var bounds, keycode;
 
     bounds = canvas.getBoundingClientRect();
-    console.log("bounds = " + bounds.left + " " + bounds.right + "  " + bounds.top + "  " + bounds.bottom);
+    console.log(
+      "bounds = " +
+        bounds.left +
+        " " +
+        bounds.right +
+        "  " +
+        bounds.top +
+        "  " +
+        bounds.bottom
+    );
     console.log("target = " + event.target);
-    if (event.clientX >= bounds.left &&
+    if (
+      event.clientX >= bounds.left &&
       event.clientX <= bounds.right &&
       event.clientY >= bounds.top &&
-      event.clientY <= bounds.bottom) {
-      keycode = (event.keyCode ? event.keyCode : event.which);
+      event.clientY <= bounds.bottom
+    ) {
+      keycode = event.keyCode ? event.keyCode : event.which;
       console.log(keycode + " keyboard event in canvas");
     }
 
@@ -107,9 +115,9 @@ window.Event_experiments_events_01 = function (scene, control_id_list) {
 
     control = $(event.target);
     if (control) {
-      switch (control.attr('id')) {
+      switch (control.attr("id")) {
         case "my_pause":
-          if (control.is(":checked"))  {
+          if (control.is(":checked")) {
             animate_is_on = true;
             scene.animate_active = true;
             self.animate();
@@ -123,11 +131,9 @@ window.Event_experiments_events_01 = function (scene, control_id_list) {
 
   //------------------------------------------------------------------------------
   self.animate = function () {
-
     var now, elapsed_time;
 
     if (scene.animate_active) {
-
       now = Date.now();
       elapsed_time = now - previous_time;
 
@@ -146,7 +152,7 @@ window.Event_experiments_events_01 = function (scene, control_id_list) {
   self.removeAllEventHandlers = function () {
     var j;
     for (j = 0; j < control_id_list.length; j += 1) {
-      var control = $('#' + control_id_list);
+      var control = $("#" + control_id_list);
       if (control) {
         control.unbind("click", self.html_control_event);
       }
@@ -157,7 +163,7 @@ window.Event_experiments_events_01 = function (scene, control_id_list) {
   // Constructor code for the class.
 
   // Private variables
-  var out = scene.out;    // Debugging and output goes here.
+  var out = scene.out; // Debugging and output goes here.
   var canvas = scene.canvas;
 
   // Remember the current state of events
@@ -171,12 +177,9 @@ window.Event_experiments_events_01 = function (scene, control_id_list) {
   // Add an onclick callback to each HTML control
   var j;
   for (j = 0; j < control_id_list.length; j += 1) {
-    var control = $('#' + control_id_list);
+    var control = $("#" + control_id_list);
     if (control) {
-      control.click( self.html_control_event );
+      control.click(self.html_control_event);
     }
   }
-}
-
-
-
+};

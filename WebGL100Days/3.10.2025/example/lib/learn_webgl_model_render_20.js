@@ -48,7 +48,6 @@
  * @constructor
  */
 var Learn_webgl_model_render_20 = function (gl, program, model, out) {
-
   var self = this;
 
   // Variables to remember so the model can be rendered.
@@ -73,7 +72,7 @@ var Learn_webgl_model_render_20 = function (gl, program, model, out) {
 
     buffer_id = gl.createBuffer();
     if (!buffer_id) {
-      out.displayError('Failed to create the buffer object for ' + model.name);
+      out.displayError("Failed to create the buffer object for " + model.name);
       return null;
     }
 
@@ -92,14 +91,19 @@ var Learn_webgl_model_render_20 = function (gl, program, model, out) {
    * @private
    */
   function _buildBufferObjects() {
-
     // Build the buffers for the triangles
     if (model.triangles !== null && model.triangles.vertices.length > 0) {
       number_triangles = model.triangles.vertices.length / 3 / 3;
-      triangles_vertex_buffer_id = _createBufferObject(model.triangles.vertices);
+      triangles_vertex_buffer_id = _createBufferObject(
+        model.triangles.vertices
+      );
       triangles_color_buffer_id = _createBufferObject(model.triangles.colors);
-      triangles_normal_buffer_id = _createBufferObject(model.triangles.flat_normals);
-      triangles_smooth_normal_buffer_id = _createBufferObject(model.triangles.smooth_normals);
+      triangles_normal_buffer_id = _createBufferObject(
+        model.triangles.flat_normals
+      );
+      triangles_smooth_normal_buffer_id = _createBufferObject(
+        model.triangles.smooth_normals
+      );
     }
 
     // Build the buffers for the lines
@@ -115,7 +119,6 @@ var Learn_webgl_model_render_20 = function (gl, program, model, out) {
       points_vertex_buffer_id = _createBufferObject(model.points.vertices);
       points_color_buffer_id = _createBufferObject(model.points.colors);
     }
-
   }
 
   //-----------------------------------------------------------------------
@@ -124,14 +127,16 @@ var Learn_webgl_model_render_20 = function (gl, program, model, out) {
    * @private
    */
   function _getShaderVariableLocations() {
-
     program.u_PVM_transform = gl.getUniformLocation(program, "u_PVM_transform");
     program.u_VM_transform = gl.getUniformLocation(program, "u_VM_transform");
-    program.u_Light_position = gl.getUniformLocation(program, "u_Light_position");
+    program.u_Light_position = gl.getUniformLocation(
+      program,
+      "u_Light_position"
+    );
 
-    program.a_Vertex = gl.getAttribLocation(program, 'a_Vertex');
-    program.a_Color = gl.getAttribLocation(program, 'a_Color');
-    program.a_Vertex_normal = gl.getAttribLocation(program, 'a_Vertex_normal');
+    program.a_Vertex = gl.getAttribLocation(program, "a_Vertex");
+    program.a_Color = gl.getAttribLocation(program, "a_Color");
+    program.a_Vertex_normal = gl.getAttribLocation(program, "a_Vertex_normal");
   }
 
   //-----------------------------------------------------------------------
@@ -252,7 +257,6 @@ var Learn_webgl_model_render_20 = function (gl, program, model, out) {
    * @param transform Learn_webgl_matrix A 4x4 transformation matrix.
    */
   self.render = function (pvm_transform, vm_transform) {
-
     gl.useProgram(program);
 
     // Set the transform for all the faces, lines, and points
@@ -263,5 +267,4 @@ var Learn_webgl_model_render_20 = function (gl, program, model, out) {
     _renderLines();
     _renderTriangles();
   };
-
 };

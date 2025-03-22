@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "./App.css";
 import * as React from "react";
 import FormGroup from "@mui/material/FormGroup";
@@ -143,9 +144,6 @@ function App() {
       </h2>
       <div style={{ fontSize: "16px" }}>Found links: </div>
       <FormGroup>{labels}</FormGroup>
-      <Button onClick={download} variant="contained" size="small">
-        Download
-      </Button>
       <FormControlLabel
         style={{ marginLeft: "15px" }}
         control={
@@ -153,6 +151,9 @@ function App() {
         }
         label="Select All"
       />
+      <Button onClick={download} variant="contained" size="small">
+        Download
+      </Button>
       <div>{log}</div>
     </>
   );

@@ -6,8 +6,8 @@ function App() {
       <h1>Plaster scene</h1>
       <canvas
         style={{ border: "2px solid rgb(60, 60, 60)" }}
-        height={1000}
-        width={1000}
+        height={700}
+        width={1200}
       />
     </>
   );
