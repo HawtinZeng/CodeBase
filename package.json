@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@amcharts/amcharts5": "^5.10.5"
+    "@amcharts/amcharts5": "^5.10.5",
+    "@vitejs/plugin-legacy": "^6.0.2"
   }
 }

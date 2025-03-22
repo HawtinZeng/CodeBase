@@ -1,0 +1,16 @@
+{
+  "name": "willow",
+  "version": "1.0.0",
+  "module": "willow.js",
+  "scripts": {
+    "build": "rollup --config"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "rollup": "^4.36.0"
+  }
+}
