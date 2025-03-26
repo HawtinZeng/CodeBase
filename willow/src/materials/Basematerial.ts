@@ -1,0 +1,17 @@
+import { generateUUID } from "../math/MathUtils";
+
+let _materialId = 0
+export class Material {
+  userData: Object;
+  isMaterial: true = true
+  opacity: number = 1;
+  id: number;
+  uuid: string;
+  type: string;
+  
+  constructor(public color: string = "#ff0000") {
+    this.userData = {};
+    this.id = _materialId++
+    this.uuid = generateUUID()
+  }
+}

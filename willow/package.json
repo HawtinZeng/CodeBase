@@ -12,5 +12,9 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-typescript": "^12.1.2",
     "rollup": "^4.36.0"
+  },
+  "dependencies": {
+    "@types/three": "^0.174.0",
+    "three": "^0.174.0"
   }
 }
