@@ -1,5 +1,5 @@
 export function createCanvasElement(): HTMLCanvasElement {
-  const canvas = createElementNS("canvas");
+  const canvas = createElementNS("canvas") as HTMLCanvasElement;
   canvas.style.display = "block";
   return canvas;
 }

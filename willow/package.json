@@ -1,7 +1,7 @@
 {
   "name": "willow",
   "version": "1.0.0",
-  "module": "willow.js",
+  "module": "dist/willow.js",
   "scripts": {
     "build": "rollup --config"
   },

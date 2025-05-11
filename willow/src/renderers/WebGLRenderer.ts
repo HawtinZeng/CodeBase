@@ -27,5 +27,14 @@ export class WebGLRenderer {
     // for each object, bind buffer and drawArray
 
     this.currentState = new RenderState();
+    this.renderObjects(scene.meshes)
+  }
+  renderObjects(objects: any) {
+    objects.forEach(item => {
+      this.renderObject(item)
+    })
+  }
+  renderObject(object: any) {
+
   }
 }

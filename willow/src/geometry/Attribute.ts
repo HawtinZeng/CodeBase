@@ -1,3 +1,3 @@
 export class Attribute {
-  constructor(public array: Float32Array, public itemSize: number) {}
+  constructor(public array: ArrayBuffer, public itemSize: number) {}
 }
