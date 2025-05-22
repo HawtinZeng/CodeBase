@@ -15,9 +15,5 @@
     "rollup": "^4.36.0",
     "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "@types/three": "^0.174.0",
-    "three": "^0.174.0"
   }
 }
